@@ -7,6 +7,7 @@ const socketIO=require('socket.io')
 const port=process.env.PORT||3000;
 var server=http.createServer(app);
 var io=socketIO(server)
+const {generateMessage} =require('./utils/message')
 
 app.use(express.static(publicPath))
 
@@ -27,17 +28,8 @@ socket.on('createMessage',(message)=>{
     // })
 })
 
-socket.emit('newMessage',{
-    from:'admin',
-    text:'Welcome to chat app',
-    createdAt:new Date().getTime()
-})
-socket.broadcast.emit('newMessage',{
-    from:'admin',
-    text:'new user joined ',
-    createdAt:new Date().getTime()
-
-})
+socket.emit('newMessage',generateMessage('Adnin','welcome to chat app'))
+socket.broadcast.emit('newMessage',generateMessage('admin','new user joined'))
 
 
     socket.on('disconnect',()=>{
