@@ -9,28 +9,27 @@ var server=http.createServer(app);
 var io=socketIO(server)
 
 app.use(express.static(publicPath))
+
 io.on('connection',(socket)=>{
     console.log('New user connected')
+socket.on('createMessage',(message)=>{
+    console.log('createMessage',message);
+   io.emit('newMessage',{
+       from:message.from,
+       text:message.text,
+       createAt:new Date().getTime()
+   })
+})
+
+
+
+
     socket.on('disconnect',()=>{
         console.log('client disconnected')
     })
-    socket.emit('newEmail',{
-        name:'Mahran'
-    })
-    socket.on('createEmail',()=>{
-        console.log('client create new email')
-    })
-
-    socket.emit('newMessage',{
-        from:'admin@admin.com',
-        text:'Hello from Server',
-        createdAt:'23.3.2018'
-    })
-
-    socket.on('createMessage',(message)=>{
-        console.log(message)
-    })
 })
+
+
 
 
 server.listen(port,()=>{
